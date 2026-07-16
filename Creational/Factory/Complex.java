@@ -2,7 +2,7 @@ package Creational.Factory;
 public class Complex {
     double _r, _i;
 
-    public static Complex CreateFromCartesian(double real, double imaginary) {
+    public static Complex createFromCartesian(double real, double imaginary) {
         return new Complex(real, imaginary);
     }
 
@@ -29,6 +29,9 @@ public class Complex {
     }
 
     public static void main(String[] args) {
-        Complex c = Complex.CreateFromCartesian(100, 100);
+        Complex c = Complex.createFromCartesian(100, 100);
+        Complex p = Complex.createFromPolar(10, Math.PI / 4);
+        System.out.println(c.getR() + " + " + c.getI() + "i");
+        System.out.println(p.getR() + " + " + p.getI() + "i");
     }
 }

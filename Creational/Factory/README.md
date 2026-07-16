@@ -22,7 +22,7 @@ The **Static Factory Method** is a creational technique where a class hides its 
 public class Complex {
     double _r, _i;                                  // (1) internal Cartesian state
 
-    public static Complex CreateFromCartesian(double real, double imaginary) {
+    public static Complex createFromCartesian(double real, double imaginary) {
         return new Complex(real, imaginary);        // (2) factory #1
     }
 
@@ -45,7 +45,7 @@ public class Complex {
 ### How each piece drives the pattern
 
 1. **Internal state (`_r`, `_i`)** — the object always stores itself in Cartesian form. Callers don't need to know that; they pick whichever coordinate system is convenient.
-2. **`CreateFromCartesian`** — the straightforward factory: it just forwards its arguments to the constructor.
+2. **`createFromCartesian`** — the straightforward factory: it just forwards its arguments to the constructor.
 3. **`createFromPolar`** — the reason the pattern earns its keep. It takes `(modulus, angle)` and converts to Cartesian (`r·cos θ`, `r·sin θ`) *before* constructing. Two static methods with the same parameter types `(double, double)` are legal; two constructors with those same types would **not compile**.
 4. **Private constructor** — `private Complex(...)` blocks `new Complex(...)` from outside the class. That forces every caller through a factory method, which is what lets the two named entry points coexist.
 
@@ -55,18 +55,17 @@ public class Complex {
 
 ```java
 public static void main(String[] args) {
-    Complex c = Complex.CreateFromCartesian(100, 100);
+    Complex c = Complex.createFromCartesian(100, 100);
+    Complex p = Complex.createFromPolar(10, Math.PI / 4);
+    System.out.println(c.getR() + " + " + c.getI() + "i");
+    System.out.println(p.getR() + " + " + p.getI() + "i");
 }
 ```
 
-The `main` method just constructs one `Complex` via the Cartesian factory. It doesn't print anything — it exists to show the call site. To see both factories in action you could add:
+`main` builds one `Complex` from each factory and prints its Cartesian components:
 
-```java
-Complex c = Complex.CreateFromCartesian(100, 100);
-Complex p = Complex.createFromPolar(10, Math.PI / 4);
-System.out.println(c.getR() + " + " + c.getI() + "i");
-System.out.println(p.getR() + " + " + p.getI() + "i");
-```
+- `c` comes straight from `(100, 100)`.
+- `p` comes from polar `(modulus = 10, angle = π/4)`, which the factory converts to Cartesian — both components land near `7.07` (`10 · cos 45°` and `10 · sin 45°`).
 
 ---
 
@@ -93,6 +92,5 @@ The program produces no output as written (see the demo section above to add som
 
 ## Notes on this example
 
-- **Naming is inconsistent**: `CreateFromCartesian` is capitalized while `createFromPolar` is not. Java convention is `camelCase` for methods — both should start lowercase. Left as-is here to match the source.
 - **`Modulus()` is a stub**: it prints a message and returns `0xBEEF` (48879) instead of computing `√(r² + i²)`. A real implementation would be `return Math.hypot(_r, _i);`.
 - **Static factory vs. Factory Method / Abstract Factory**: this is the *static factory method* idiom (named constructors on one class). It is related to, but distinct from, the GoF **Factory Method** pattern (a subclass overrides a method to decide which product to instantiate) and **Abstract Factory** (a family of related products behind an interface).
