@@ -1,4 +1,4 @@
-package Behavioral.templateMethod;
+package behavioral.behavioral_tmp123.templateMethod;
 
 public class TemplateMethod {
     public static void main(String[] args) {

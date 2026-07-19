@@ -1,3 +1,4 @@
+package behavioral.behavioral_tmp123.strategy;
 
 public class StrategyTest {
     public static void main(String[] args) {
